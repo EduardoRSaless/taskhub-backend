@@ -16,7 +16,10 @@ public class EventController {
     private EventRepository eventRepository;
 
     @GetMapping
-    public List<Event> getAllEvents() {
+    public List<Event> getAllEvents(@RequestParam(required = false) UUID userId) {
+        if (userId != null) {
+            return eventRepository.findByCreatedBy(userId);
+        }
         return eventRepository.findAll();
     }
 
@@ -36,6 +39,7 @@ public class EventController {
         event.setDescription(eventDetails.getDescription());
         event.setStatus(eventDetails.getStatus());
         event.setProjectId(eventDetails.getProjectId());
+        // Não atualizamos o createdBy para manter o dono original
         return eventRepository.save(event);
     }
 
