@@ -23,10 +23,13 @@ public class ProjectController {
     private TeamRepository teamRepository;
 
     @GetMapping
-    public List<Project> getAllProjects() {
-        List<Project> projects = projectRepository.findAll();
-        System.out.println("Retornando " + projects.size() + " projetos.");
-        return projects;
+    public List<Project> getAllProjects(@RequestParam(required = false) UUID ownerId) { // Corrigido para ownerId
+        if (ownerId != null) {
+            System.out.println("Buscando projetos para o usuário (ownerId): " + ownerId);
+            return projectRepository.findByOwnerId(ownerId);
+        }
+        System.out.println("Buscando todos os projetos (sem filtro de usuário).");
+        return projectRepository.findAll();
     }
 
     @PostMapping
